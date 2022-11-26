@@ -69,10 +69,10 @@ def init(table):
 def returnPhysicalAddress: updates the table variable by calling updateTable function
         with the physical addresses and PRINTS the physical address or prints SEGFAULT
         or DISK. 
-Args: pageNum, bitSize, offset
+Args: pageNum, bitSize, offset, amountOfRows
 Returns: None
 """
-def returnPhysicalAddress(pageNum, bitSize, offset):
+def returnPhysicalAddress(pageNum, bitSize, offset, amountOfRows):
     
     global table
     global clock
@@ -82,10 +82,21 @@ def returnPhysicalAddress(pageNum, bitSize, offset):
     rowIndex = int(pageNum,2)
     # 
     toAppend = f'{table[rowIndex][2]:0{bitSize}b}'
-   
+    
     if table[rowIndex][1] == 0:
         print("SEGFAULT")
         return
+    
+    #Fill up page table if not full already
+    if len(clock) == 0:
+        print("No valid bits to start with")
+        exit(1)
+        #table[rowIndex][3] = 1
+        #table[rowIndex][0] = 1
+        #clock.append([1,table[rowIndex][2]])
+        #updateClockIndex()
+    
+
     elif table[rowIndex][0] == 0:
         while True:
             if clock[clockIndex][0] == 1:
@@ -161,6 +172,7 @@ def initClock():
     for row in table:
         if row[0] == 1:
             localClock.append([row[3], counter])
+            updateClockIndex()
         counter += 1
     #localClock = [row[3] for row in table if row[0] == 1]
     return localClock
@@ -174,7 +186,7 @@ def fileChecker(x):
     if len(x) == 4:
         if x[0] != 0 and x[0] != 1:
             return False
-        elif x[1] < 0 or x[1] > 7:
+        elif x[1] < 0 or x[1] > 8:
             return False
         elif x[2] < 0:
             return False
@@ -206,6 +218,8 @@ def main(arg):
 
     n, m, size = init(fileToRead)
 
+
+    amountOfRows = 2**n / size
     # remove the first line that just contains our n, m, and size values.
     fileToRead.pop(0)
     # middleware: stores the fileToRead and checks that the input is valid 
@@ -234,7 +248,7 @@ def main(arg):
                 pageNum = res[:pageNumBits]
                 
                 appendSize = m - len(offset)
-                returnPhysicalAddress(pageNum, appendSize, offset)
+                returnPhysicalAddress(pageNum, appendSize, offset, amountOfRows)
                 
                 
             else:
@@ -250,7 +264,7 @@ def main(arg):
                 appendSize = m - len(offset)
                 #print(pageNum)
                 
-                returnPhysicalAddress(pageNum, appendSize, offset)
+                returnPhysicalAddress(pageNum, appendSize, offset, amountOfRows)
                 
         
     except EOFError as e:

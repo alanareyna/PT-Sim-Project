@@ -13,7 +13,7 @@
 Andrew Avola <avolaa@sonoma.edu>
 Amit Deb <deb@sonoma.edu>
 Alana Reyna <reyna@sonoma.edu>
-Kallista Stamas <stamas@sonoma.edu> 
+Kallista Stamas <stamask@sonoma.edu> 
 
 ---- PRELIMINARIES ----
 
@@ -50,11 +50,19 @@ N/A
 >> 0x40
 >>
 
+DISK
+0x5f
+0x9b
+0x5f
+0xa0
+
 >> A2: It is ok if your program just reads every row of the input file,
 >> but it is possible to compute how many rows you might expect.
 >> Show a computation to determine how many rows are in the page table
 >> using the first row of the input file shows above: 7 8 32
 
+The number of bits in the virtual address divided by size of page table
+2^7 / 2^5 = 2^2 = 4 rows
 
 ---- DATA STRUCTURES ----
 
@@ -105,8 +113,21 @@ Returns: hex of the physical address, SEGFAULT, or DISK
 >> transformations of data, and relevant support functions you used
 >> to accomplish this.
 
-
-
+We took the log base 2 of the size of the page table. After that, 
+we converted that decimal number into binary, which served as our 
+amount of offset bits we were going to use. We then converted the 
+hexadecimal that was passed to our program into binary. For example,
+if our page table size was 32 bits, we did log base 2 of 32 and got 5.
+When we converted the passed in hexadecimal address into binary, 
+we take the first 5 bits as offset. To find out what our index bits 
+into the page table are, we took the amount of bits that the virtual 
+address is and subtracted that by the offset bits, which lead to giving us 
+our index bits. We used the index bits to read which row of the table 
+we were looking at. After having done so, we pulled out the frame number 
+and converted it into binary. We appended the frame number binary number 
+to our offset binary number and that lead us to our physical address of size 
+N. We converted the physical address bits back into hexadecimal and that lead 
+us to the answer. 
 
                CLOCK REPLACEMENT SIMULATOR
                ===========================
@@ -130,6 +151,12 @@ Returns: hex of the physical address, SEGFAULT, or DISK
 >> 0x7F
 >> 0x40
 >>
+
+PAGEFAULT  0x85
+0x5f
+PAGEFAULT  0xbb
+0x5f
+PAGEFAULT  0x80
 
 ---- DATA STRUCTURES ----
 
@@ -180,7 +207,7 @@ Returns: the integer values of n(the number of bits in the virtual address),
 def returnPhysicalAddress: updates the table variable by calling updateTable function
         with the physical addresses and PRINTS the physical address or prints SEGFAULT
         or DISK. 
-Args: pageNum, bitSize, offset
+Args: pageNum, bitSize, offset, amountOfRows
 Returns: None
 """
 
@@ -224,6 +251,27 @@ Returns: None (calls the returnPhysicalAddress function which will
 >> you would need if you were using a space-efficient representation 
 >> (in particular, describe how might implement a row of the table in C).
 
+(i) We used a one-dimensional array of tuples for our clock. The first 
+index of each tuple was responsible for representing the "recently used" 
+bit, and the second index represents "frame number". We used another 
+variable called clockIndex that was a counter to search through the clock. 
+Every time we reached the end of the clock, that index variable was set 
+back to zero, emulating a cycle.
+
+(ii) Firstly, we would need to find the amount of virtual pages we have. 
+Let's use (12, 16, 128) from PT_A.txt. Similar to exercise 2 from our module, 
+we would take 2^12 virtual pages and divide it by log base 2(128) which is 2^7. 
+This would lead us to 2^5 page table entries. To obtain the amount of bits per 
+table entries, we would use the physical address bits, which is 2^16 and divide 
+it by 2^7. This leads us to 2^9. We are interested in the exponent, which tells 
+us we have 9 bits + 3 protection bits (Recently used bit, access bit, valid bit) 
+per table entry. For the final calculation, we multiply 11 and 2^5 together, 
+which gives us the total memory to store the page table. We can perform 
+division on 11 * 2^5 and the amount of rows to find out how many bits per row 
+we need. This would be the most efficient way to allocate the maximum amount of 
+bits we would need in C. To take this further, we might be able to use bit-fields 
+to obtain an exact amount of bits per row.
+
 ---- RATIONALE ----
 
 >> B5: Did you need to handle any ambiguous scenarios or corner cases
@@ -232,6 +280,14 @@ Returns: None (calls the returnPhysicalAddress function which will
 >> there is a page table and no valid entries to evict?
 >> Explain any judgements you used in implementing
 >> unclear or unspecified behavior.
+
+We handle the spaces and nonaccepting entries in the input file to create the table so it doesn't contain NULL/nonaccepting entries.
+We do this by filtering out blank entries; the length of the entry is 4 columns; the valid bit is 0 or 1; the access bit is between 0 and 8;
+the frame number is greater than zero; and the recently used bit is 0 or 1. 
+We handle the leading zeros on the bit conversions of hex and decimals by getting only a specfic amount of bits
+We handle if a inputed request is bigger (in binary) than what the table can handle. We do this by checking the length of the input to the size of virtual
+address, if its bigger then we exit. Our program will exit when there is a page table and no valid entries to evict thus theres nothing in memory to evict.
+
 
 
                SURVEY QUESTIONS
