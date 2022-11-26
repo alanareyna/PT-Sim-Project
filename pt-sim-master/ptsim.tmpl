@@ -10,17 +10,21 @@
 
 >> Fill in the names and email addresses of your group members.
 
-FirstName LastName <email@domain.example>
-FirstName LastName <email@domain.example>
+Andrew Avola <avolaa@sonoma.edu>
+Amit Deb <deb@sonoma.edu>
+Alana Reyna <reyna@sonoma.edu>
+Kallista Stamas <stamas@sonoma.edu> 
 
 ---- PRELIMINARIES ----
 
 >> If you have any preliminary comments on your submission or
 >> bug notes, please give them here.
+N/A
 
 >> Please cite any offline or online sources you consulted while
 >> preparing your submission, other than man pages, course
 >> text, lecture notes, and course staff.
+N/A
 
 
                PAGE TABLE SIMULATOR
@@ -45,6 +49,9 @@ FirstName LastName <email@domain.example>
 >> 0x7F
 >> 0x40
 >>
+
+0x05: SEGFAULT
+0x7F: 
 
 >> A2: It is ok if your program just reads every row of the input file,
 >> but it is possible to compute how many rows you might expect.
@@ -106,12 +113,82 @@ FirstName LastName <email@domain.example>
 >> Identify the purpose of each in 2--25 words.
 >> Do not repeat anything already described in A3.
 
+"""
+global clock: Array of the converted physical addresses
+Args: None
+Returns: None
+"""
+global clock
+
+"""
+global clockIndex: Array of the clock indexes
+Args: None
+Returns: None
+"""
+global clockIndex
+
+"""
+global table: 2D arrary that holds the updated page table
+Args: None
+Returns: None
+"""
+global table
+
 ---- FUNCTIONS ----
 
 >> B3: Provide a prototype and documentation for each function
 >> you have introduced to support this portion of the project.
 >> Use the Google Style Guide for function documentation.
 >> Do not repeat anything already described in A4.
+
+"""
+def init(table): Function that populates the page table 
+Args: global table
+Returns: the integer values of n(the number of bits in the virtual address), 
+        m(the number of bits in the physical address), and size(the size of a
+        page in bytes).
+"""
+
+"""
+def returnPhysicalAddress: updates the table variable by calling updateTable function
+        with the physical addresses and PRINTS the physical address or prints SEGFAULT
+        or DISK. 
+Args: pageNum, bitSize, offset
+Returns: None
+"""
+
+"""
+def updateClockIndex: updates our clockIndex variable 
+Args: None
+Returns: None
+"""
+
+"""
+def updateTable: updates the table, clock, and clock index based on the rowIndex given.
+Args: rowIndex
+Returns: None
+"""
+
+"""
+def initClock: creates the initial clock.
+Args: None
+Returns: localClock
+"""
+
+"""
+def fileChecker: checks if we are given valid input.
+Args: x
+Returns: True or False 
+"""
+
+"""
+def main: handles opening the input file, initializing/populating our global variables, 
+            checks for valid input, and checks if the input file given is in hex or 
+            decimal. 
+Args: arg
+Returns: None (calls the returnPhysicalAddress function which will 
+        print the physical addresses) 
+"""
 
 ---- ALGORITHMS ----
 

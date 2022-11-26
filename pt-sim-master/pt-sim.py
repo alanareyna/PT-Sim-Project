@@ -1,9 +1,9 @@
 import sys
 import math
 
-
-
-
+"""
+This file contains the implementation of Part A
+"""
 
 def init(twoArray):
     n = 0
