@@ -2,7 +2,20 @@ import sys
 import math
 
 
-
+def fileChecker(x):
+    if len(x) == 4:
+        if x[0] != 0 and x[0] != 1:
+            return False
+        elif x[1] < 0 or x[1] > 7:
+            return False
+        elif x[2] < 0:
+            return False
+        elif x[3] != 0 and x[3] != 1:
+            return False
+        else:
+            return True
+    else:
+        return False
 
 
 def init(twoArray):
@@ -39,12 +52,19 @@ def returnPhysicalAddress(pageNum, twoArray, bitSize, offset):
 #'./tests/PT_A.txt'
 with open(str(sys.argv[1]), 'r') as textFile:
     fileToRead = [list(map(int, line.split())) for line in textFile]
+    
 #print(input)
 
 n, m, size = init(fileToRead)
 
 fileToRead.pop(0)
 #print(fileToRead)
+
+middleWare = filter(fileChecker, fileToRead)
+table = []
+for x in middleWare:
+    table.append(x)
+
 
 try:
     while True:
@@ -53,7 +73,9 @@ try:
             #TODO check for valid inputs
             
             res = f'{int(userInput,16):0{n}b}'
-            
+            if len(res)> n:
+                print("Number is too large!")
+                exit(1)
             #print("res:", res)
             #print(res[-size:])
             
@@ -62,19 +84,22 @@ try:
             pageNum = res[:pageNumBits]
             
             appendSize = m - len(offset)
-            print(returnPhysicalAddress(pageNum, fileToRead, appendSize, offset))
+            print(returnPhysicalAddress(pageNum, table, appendSize, offset))
             
             
         else:
             #TODO check for valid inputs
             #decimalToBinary
             res = f'{int(userInput):0{n}b}'
+            if len(res)> n:
+                print("Number is too large!")
+                exit(1)
             #print(res)
             offset = res[-size:]
             pageNumBits = len(res) - size
             pageNum = res[:pageNumBits]
             appendSize = m - len(offset)
-            print(returnPhysicalAddress(pageNum, fileToRead, appendSize, offset))
+            print(returnPhysicalAddress(pageNum, table, appendSize, offset))
             
     
 except EOFError as e:
