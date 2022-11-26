@@ -30,7 +30,9 @@ Returns: None
 global table
 
 """
-def init(table): Function that populates the page table 
+def init(table): Function that gets the number of bits in the virual address,
+                number of bits in physical address, and the size of the page 
+                converted to integer values.
 Args: global table
 Returns: the integer values of n(the number of bits in the virtual address), 
         m(the number of bits in the physical address), and size(the size of a

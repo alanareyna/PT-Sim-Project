@@ -50,9 +50,6 @@ N/A
 >> 0x40
 >>
 
-0x05: SEGFAULT
-0x7F: 
-
 >> A2: It is ok if your program just reads every row of the input file,
 >> but it is possible to compute how many rows you might expect.
 >> Show a computation to determine how many rows are in the page table
@@ -66,6 +63,10 @@ N/A
 >> Identify the purpose of each in 2--25 words.
 >> Recall the instructions required at least one data structure.
 
+# static table variable to store the page table 
+table = []
+
+
 ---- FUNCTIONS ----
 
 >> A4: Provide a prototype and documentation for each function
@@ -73,6 +74,30 @@ N/A
 >> Use the Google Style Guide for function documentation.
 >> Recall the instructions required at least two functions
 >> in your project, and these should be reflected in A4 and/or B3.
+
+"""
+def fileChecker: checks if we are given valid input.
+Args: x
+Returns: True or False 
+"""
+
+"""
+def init(twoArray): Function that gets and saves the number of bits in the virtual address,
+                    number of bits in the physical address, and the sizeo of the page converted
+                    to integer values. 
+Args: twoArray
+Returns: the integer values of n(the number of bits in the virtual address), 
+        m(the number of bits in the physical address), and size(the size of a
+        page in bytes).
+"""
+
+"""
+def returnPhysicalAddress: returns either the physical address, SEGFAULT, or DISK.
+Args: pageNum, twoArray, bitSize, offset
+Returns: hex of the physical address, SEGFAULT, or DISK
+"""
+
+
 
 ---- ALGORITHMS ----
 
@@ -142,7 +167,9 @@ global table
 >> Do not repeat anything already described in A4.
 
 """
-def init(table): Function that populates the page table 
+def init(table): Function that gets the number of bits in the virual address,
+                number of bits in physical address, and the size of the page 
+                converted to integer values.
 Args: global table
 Returns: the integer values of n(the number of bits in the virtual address), 
         m(the number of bits in the physical address), and size(the size of a
