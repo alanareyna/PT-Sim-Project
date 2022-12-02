@@ -172,7 +172,6 @@ def initClock():
     for row in table:
         if row[0] == 1:
             localClock.append([row[3], counter])
-            updateClockIndex()
         counter += 1
     #localClock = [row[3] for row in table if row[0] == 1]
     return localClock
